@@ -1,22 +1,14 @@
 const fs = require('fs');
 
-// Read and clean the JSON file
-const cleanJson = () => {
-  try {
-    const dirty = fs.readFileSync('testcases.json', 'utf8');
-    
-    // Remove all non-ASCII characters and fix common JSON issues
-    const clean = dirty
-      .replace(/[^\x00-\x7F]/g, '') // Remove non-ASCII
-      .replace(/\s+/g, ' ')          // Normalize whitespace
-      .replace(/,(\s*[}\]])/g, '$1') // Remove trailing commas
-      .replace(/'/g, '"');           // Replace single quotes
-    
-    fs.writeFileSync('testcases_clean.json', clean);
-    console.log('Successfully created cleaned JSON file');
-  } catch (err) {
-    console.error('Error cleaning JSON:', err.message);
-  }
-};
+// Read the original file
+const dirty = fs.readFileSync('testcases.json', 'utf8');
 
-cleanJson();
+// Remove non-ASCII characters and fix whitespace
+const clean = dirty.replace(/[^\x00-\x7F]/g, '')
+                  .replace(/\s+/g, ' ')
+                  .replace(/,(\s*})/g, '$1');
+
+// Write cleaned version
+fs.writeFileSync('testcases_clean.json', clean);
+
+console.log('Created cleaned JSON file: testcases_clean.json');
